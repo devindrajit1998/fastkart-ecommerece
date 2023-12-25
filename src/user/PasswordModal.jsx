@@ -1,25 +1,33 @@
-import React from 'react'
-import { UserDataProvider } from '../ContextAPI/UserContext'
+import React from "react";
+import { UserDataProvider } from "../ContextAPI/UserContext";
 
 export default function PasswordModal() {
-    const {TogglePassword} = UserDataProvider();
+  const {
+    TogglePassword,
+    oldPassword,
+    newPassword,
+    confirmPassword,
+    handleOldPassword,
+    handleNewPassword,
+    handleConfirmPassword,
+    resetPassword,
+  } = UserDataProvider();
+
   return (
-   <>
-     <div
+    <>
+      <div
         className="modal fade theme-modal show"
         id="editProfile"
         tabIndex={-1}
         aria-labelledby="exampleModalLabel2"
-        style={{ display: "block", paddingLeft: 0 }}
+        style={{ display: "block" }}
         aria-modal="true"
         role="dialog"
       >
         <div className="modal-dialog modal-lg modal-dialog-centered modal-fullscreen-sm-down">
           <div className="modal-content">
-            <div className="modal-header" >
-              <h5 className="modal-title" id="exampleModalLabel2">
-                Edit Password
-              </h5>
+            <div className="modal-header">
+              <h5 className="modal-title">Edit Password</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -36,7 +44,8 @@ export default function PasswordModal() {
                       <input
                         type="text"
                         className="form-control"
-                        value={123456789}
+                        value={oldPassword}
+                        onChange={handleOldPassword}
                       />
                       <label>Old Password</label>
                     </div>
@@ -44,7 +53,8 @@ export default function PasswordModal() {
                       <input
                         type="text"
                         className="form-control"
-                        value={123456789}
+                        value={newPassword}
+                        onChange={handleNewPassword}
                       />
                       <label>New Password</label>
                     </div>
@@ -52,7 +62,8 @@ export default function PasswordModal() {
                       <input
                         type="password"
                         className="form-control"
-                        value={123456789}
+                        value={confirmPassword}
+                        onChange={handleConfirmPassword}
                       />
                       <label>Confirm New Password</label>
                     </div>
@@ -70,8 +81,8 @@ export default function PasswordModal() {
               </button>
               <button
                 type="button"
-                data-bs-dismiss="modal"
                 className="btn theme-bg-color btn-md fw-bold text-light"
+                onClick={resetPassword}
               >
                 Save changes
               </button>
@@ -79,6 +90,6 @@ export default function PasswordModal() {
           </div>
         </div>
       </div>
-   </>
-  )
+    </>
+  );
 }

@@ -3,8 +3,8 @@ import { UserDataProvider } from "../ContextAPI/UserContext";
 
 export default function LeftBody() {
 
-  const {user, loginUser} = UserDataProvider();
-const findUser = user.find((item)=>item.userName === loginUser.userName);
+  const {loggedUser, handleImageUpload, ImageUpload} = UserDataProvider();
+
   return (
     <>
       <div className="dashboard-left-sidebar">
@@ -31,14 +31,14 @@ const findUser = user.find((item)=>item.userName === loginUser.userName);
                 />
                 <div className="cover-icon">
                   <i className="fa-solid fa-pen">
-                    <input type="file" onchange="readURL(this,0)" />
+                  <input type="file" onChange={handleImageUpload} />
                   </i>
                 </div>
               </div>
             </div>
             <div className="profile-name">
-              {/* <h3>{findUser.name}</h3> */}
-              {/* <h6 className="text-content">{findUser.userName}</h6> */}
+              <h3 onClick={ImageUpload}>{loggedUser.name}</h3>
+              <h6 className="text-content">{loggedUser.userName}</h6>
             </div>
           </div>
         </div>

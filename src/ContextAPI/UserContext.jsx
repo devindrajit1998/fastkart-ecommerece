@@ -18,18 +18,21 @@ const UserProvider = ({ children }) => {
 
   // for signup ---------------------------->
   const [newUser, setNewUser] = useState({
-    name:"",
-    userName:"",
-    password:"",
-    phone:"",
-    address:"",
-    country:"",
-    city:"",
-    pin:""
+    name: "",
+    userName: "",
+    password: "",
+    phone: "",
+    address: "",
+    country: "",
+    city: "",
+    pin: "",
+    dp: "",
   });
 
   const [user, setUser] = useState([]);
-  console.log("my user", user)
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
 
   //to open modal -------------------------->
 
@@ -40,13 +43,10 @@ const UserProvider = ({ children }) => {
   // ----------------------------------------------------------------------------------------
   // ------------------------------------- API States -------------------------------------->
   // ----------------------------------------------------------------------------------------
-  // const baseURL = "http://localhost:3001/";
   const baseURL = "https://fastkart-api.onrender.com/";
   const UserDetailsEndpoint = "UserDetails";
 
   useEffect(() => {
-
-
     const fetchData = async () => {
       try {
         const userDetailsResponse = await fetch(baseURL + UserDetailsEndpoint);
@@ -65,51 +65,44 @@ const UserProvider = ({ children }) => {
     fetchData();
   }, []);
 
+  // const createData = async (newUser) => {
+  //   try {
+  //     const createResponse = await fetch(baseURL + UserDetailsEndpoint, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(newUser),
+  //     });
 
- 
-  const createData = async (newUser) => {
-    try {
-      const createResponse = await fetch(baseURL + UserDetailsEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newUser),
-       
-      });
+  //     if (!createResponse.ok) {
+  //       throw new Error("Failed to create data.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error creating data:", error);
+  //   }
+  // };
 
-      if (!createResponse.ok) {
-        throw new Error("Failed to create data.");
-      }
-    } catch (error) {
-      console.error("Error creating data:", error);
-    }
-    console.log(("created"), newUser);
-  };
+  // const updateData = async (id, newPass) => {
+  //   try {
+  //     const updateResponse = await fetch(
+  //       baseURL + UserDetailsEndpoint + `/${id}`,
+  //       {
+  //         method: "PATCH",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(newPass),
+  //       }
+  //     );
 
-
-  const updateData = async (id, updatedUserData) => {
-    try {
-      const updateResponse = await fetch(
-        baseURL + UserDetailsEndpoint + `/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedUserData),
-        }
-      );
-
-      if (!updateResponse.ok) {
-        throw new Error("Failed to update data.");
-      }
-
-
-    } catch (error) {
-      console.error("Error updating data:", error);
-    }
-  };
+  //     if (!updateResponse.ok) {
+  //       throw new Error("Failed to update data.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating data:", error);
+  //   }
+  // };
 
   const deleteData = async (id) => {
     try {
@@ -123,13 +116,10 @@ const UserProvider = ({ children }) => {
       if (!deleteResponse.ok) {
         throw new Error("Failed to delete data.");
       }
-
-
     } catch (error) {
       console.error("Error deleting data:", error);
     }
   };
-
 
   // ----------------------------------------------------------------------------------------
   // ------------------------------------- API States -------------------------------------->
@@ -186,22 +176,24 @@ const UserProvider = ({ children }) => {
       console.log("Login Succesfully !");
       setSession(true);
       setLoggedUser(matchUser);
-      localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
+      localStorage.setItem("loggedUser", JSON.stringify(matchUser));
     } else {
       console.log("Login Failed !");
     }
   };
-  // console.log("login user", loggedUser);
+  console.log("login user", loggedUser);
+
+  const Logout = () => {
+    setSession(false);
+    localStorage.setItem("loggedUser", JSON.stringify({}));
+  };
+
   useEffect(() => {
     const getData = JSON.parse(localStorage.getItem("loggedUser"));
     if (getData) {
       setLoggedUser(getData);
     }
   }, []);
-
-  const Logout = () => {
-    setSession(false);
-  };
 
   useEffect(() => {
     const getSession = JSON.parse(localStorage.getItem("session"));
@@ -226,25 +218,155 @@ const UserProvider = ({ children }) => {
     const { name, value } = e.target;
     setNewUser((items) => ({ ...items, [name]: value }));
   };
-  const SignupSubmit = () => {
+
+  const SignupSubmit = async () => {
     const findMatchUser = user.find(
       (items) => items.userName === newUser.userName
     );
+
+    console.log("findMatchUser", findMatchUser);
     if (!findMatchUser) {
       setSession(true);
-      setUser((item) => [...item, newUser]);
-      createData(newUser);
+      try {
+        const createResponse = await fetch(baseURL + UserDetailsEndpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        });
+
+        if (!createResponse.ok) {
+          throw new Error("Failed to create data.");
+        }
+      } catch (error) {
+        console.error("Error creating data:", error);
+      }
+      setLoggedUser(newUser);
     } else {
       alert("User Already Exists !");
     }
   };
-  console.log("signup data", user);
 
-  // useEffect(()=>{
-  //   createData()
-  //  },[newUser])
   // ----------------------------------------------------------------------------------------
   // -------------------------------- Signup Data Management ------------------------------->
+  // ----------------------------------------------------------------------------------------
+  // ****************************************************************************************
+
+  // ----------------------------------------------------------------------------------------
+  // ------------------------------- password Data Management ------------------------------>
+  // ----------------------------------------------------------------------------------------
+
+  // reset password ------------------------->
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleOldPassword = (e) => {
+    setOldPassword(e.target.value);
+  };
+
+  const handleNewPassword = (e) => {
+    setNewPassword(e.target.value);
+  };
+
+  const handleConfirmPassword = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+
+  const resetPassword = async (id) => {
+    const findUser = user.find((item) => item.id === loggedUser.id);
+    if (oldPassword && oldPassword === findUser.password) {
+      if (newPassword && confirmPassword && newPassword === confirmPassword) {
+        try {
+          const newID = loggedUser.id;
+          const updateResponse = await fetch(
+            baseURL + UserDetailsEndpoint + `/${newID}`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ password: confirmPassword }),
+            }
+          );
+
+          if (!updateResponse.ok) {
+            throw new Error("Failed to update password.");
+          }
+
+          console.log("Password updated successfully!");
+          TogglePassword();
+        } catch (error) {
+          console.error("Error updating password:", error);
+        }
+      }
+    } else {
+      if (!oldPassword) {
+        alert("Enter old Password");
+      } else if (newPassword !== confirmPassword) {
+        alert("confirm password not matched");
+      }
+    }
+  };
+
+  // ----------------------------------------------------------------------------------------
+  // ------------------------------- password Data Management ------------------------------>
+  // ----------------------------------------------------------------------------------------
+  //*****************************************************************************************
+  // ----------------------------------------------------------------------------------------
+  // ------------------------------- image upload Management ------------------------------->
+  // ----------------------------------------------------------------------------------------
+  // const handleImageUpload = (event) => {
+  //   const imageFile = event.target.files[0];
+  //   setSelectedImage(imageFile);
+  // }
+
+  // useEffect(() => {
+  //   if (selectedImage) {
+  //     const objectUrl = URL.createObjectURL(selectedImage);
+  //     setImageUrl(objectUrl);
+  //     console.log("dp===============================>", objectUrl);
+  //   }
+  // }, [selectedImage]);
+
+  const handleImageUpload = (event) => {
+    const imageFile = event.target.files[0];
+    setSelectedImage(imageFile);
+  };
+  
+  useEffect(() => {
+    const updateImage = async () => {
+      if (selectedImage) {
+        const objectUrl = URL.createObjectURL(selectedImage);
+        setImageUrl(objectUrl);
+        
+        try {
+          const formData = new FormData();
+          formData.append('image', selectedImage);
+          const newID = loggedUser.id;
+          const response = await fetch( baseURL + UserDetailsEndpoint + `/${newID}`, {
+            method: 'PATCH',
+            body: JSON.stringify({dp:formData}),
+          });
+  
+          if (response.ok) {
+            console.log('Image updated on JSON server!');
+          } else {
+            console.error('Failed to update image on JSON server');
+          }
+        } catch (error) {
+          console.error('Error updating image:', error);
+        }
+      }
+    };
+  
+    updateImage();
+  }, [selectedImage]);
+  
+
+  // ----------------------------------------------------------------------------------------
+  // ------------------------------- image upload Management ------------------------------->
   // ----------------------------------------------------------------------------------------
 
   return (
@@ -254,17 +376,25 @@ const UserProvider = ({ children }) => {
         user,
         login,
         loginUser,
-        handleLoginUser,
-        loginSubmit,
         session,
+        loggedUser,
+        open,
+        openPassword,
+        oldPassword,
+        newPassword,
+        confirmPassword,
         Logout,
         SignupHandle,
         SignupSubmit,
-        loggedUser,
+        handleLoginUser,
+        loginSubmit,
         ToggleModal,
-        open,
-        openPassword,
-        TogglePassword
+        TogglePassword,
+        handleOldPassword,
+        handleNewPassword,
+        handleConfirmPassword,
+        resetPassword,
+        handleImageUpload,
       }}
     >
       {children}
