@@ -101,3 +101,25 @@ table{
 .capital{
   text-transform: capitalize;
 }
+
+
+.smooth {
+  position: fixed;
+  z-index: 1000;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation: modal-open 0.5s ease forwards;
+}
+
+/* Keyframes for the open animation */
+@keyframes modal-open {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}

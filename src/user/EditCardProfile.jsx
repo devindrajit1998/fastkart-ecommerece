@@ -1,8 +1,13 @@
 import React from "react";
 import { UserDataProvider } from "../ContextAPI/UserContext";
+import City from "./City";
+import Country from "./Country";
+import State from "./State";
 
 export default function EditCardProfile() {
-  const {ToggleModal} = UserDataProvider();
+  const { ToggleModal, HandleAddressEdit, EditAdress, newUser, user, loggedUser } =
+    UserDataProvider();
+
   return (
     <>
       <div
@@ -20,11 +25,7 @@ export default function EditCardProfile() {
               <h5 className="modal-title" id="exampleModalLabel2">
                 Edit Profile
               </h5>
-              <button
-                type="button"
-                className="btn-close"
-                onClick={ToggleModal}
-              >
+              <button type="button" className="btn-close" onClick={ToggleModal}>
                 <i className="fa-solid fa-xmark" />
               </button>
             </div>
@@ -36,23 +37,11 @@ export default function EditCardProfile() {
                       <input
                         type="text"
                         className="form-control"
-                        id="pname"
-                        defaultValue="Jack Jennas"
+                        name="name"
+                        value={newUser.name}
+                        onChange={HandleAddressEdit}
                       />
-                      <label htmlFor="pname">Full Name</label>
-                    </div>
-                  </form>
-                </div>
-                <div className="col-xxl-6">
-                  <form>
-                    <div className="form-floating theme-form-floating">
-                      <input
-                        type="email"
-                        className="form-control"
-                        id="email1"
-                        defaultValue="vicki.pope@gmail.com"
-                      />
-                      <label htmlFor="email1">Email address</label>
+                      <label>Full Name</label>
                     </div>
                   </form>
                 </div>
@@ -62,13 +51,27 @@ export default function EditCardProfile() {
                       <input
                         className="form-control"
                         type="tel"
-                        defaultValue={4567891234}
-                        name="mobile"
-                        id="mobile"
                         maxLength={10}
-                        oninput=""
+                        name="phone"
+                        onChange={HandleAddressEdit}
+                        value={newUser.phone}
                       />
-                      <label htmlFor="mobile">Email address</label>
+                      <label>Phone</label>
+                    </div>
+                  </form>
+                </div>
+                <div className="col-xxl-6">
+                  <form>
+                    <div className="form-floating theme-form-floating">
+                      <input
+                        className="form-control"
+                        type="tel"
+                        maxLength={6}
+                        name="pin"
+                        onChange={HandleAddressEdit}
+                        value={newUser.pin}
+                      />
+                      <label>Pin Code</label>
                     </div>
                   </form>
                 </div>
@@ -78,23 +81,11 @@ export default function EditCardProfile() {
                       <input
                         type="text"
                         className="form-control"
-                        id="address1"
-                        defaultValue="8424 James Lane South San Francisco"
+                        onChange={HandleAddressEdit}
+                        value={newUser.address}
+                        name="address"
                       />
-                      <label htmlFor="address1">Add Address</label>
-                    </div>
-                  </form>
-                </div>
-                <div className="col-12">
-                  <form>
-                    <div className="form-floating theme-form-floating">
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="address2"
-                        defaultValue="CA 94080"
-                      />
-                      <label htmlFor="address2">Add Address 2</label>
+                      <label>Add Address</label>
                     </div>
                   </form>
                 </div>
@@ -103,61 +94,73 @@ export default function EditCardProfile() {
                     <div className="form-floating theme-form-floating">
                       <select
                         className="form-select"
-                        id="floatingSelect1"
-                        aria-label="Floating label select example"
+                        onChange={HandleAddressEdit}
+                        value={newUser.country}
+                        name="country"
                       >
-                        <option selected="">Choose Your Country</option>
-                        <option value="kindom">United Kingdom</option>
-                        <option value="states">United States</option>
-                        <option value="fra">France</option>
-                        <option value="china">China</option>
-                        <option value="spain">Spain</option>
-                        <option value="italy">Italy</option>
-                        <option value="turkey">Turkey</option>
-                        <option value="germany">Germany</option>
-                        <option value="russian">Russian Federation</option>
-                        <option value="malay">Malaysia</option>
-                        <option value="mexico">Mexico</option>
-                        <option value="austria">Austria</option>
-                        <option value="hong">Hong Kong SAR, China</option>
-                        <option value="ukraine">Ukraine</option>
-                        <option value="thailand">Thailand</option>
-                        <option value="saudi">Saudi Arabia</option>
-                        <option value="canada">Canada</option>
-                        <option value="singa">Singapore</option>
+                        <Country />
                       </select>
-                      <label htmlFor="floatingSelect">Country</label>
+                      <label>Country</label>
                     </div>
                   </form>
                 </div>
                 <div className="col-xxl-4">
                   <form>
                     <div className="form-floating theme-form-floating">
-                      <select className="form-select" id="floatingSelect">
-                        <option selected="">Choose Your City</option>
-                        <option value="kindom">India</option>
-                        <option value="states">Canada</option>
-                        <option value="fra">Dubai</option>
-                        <option value="china">Los Angeles</option>
-                        <option value="spain">Thailand</option>
+                      <select
+                        className="form-select"
+                        onChange={HandleAddressEdit}
+                        value={newUser.state}
+                        name="state"
+                      >
+                        <State />
                       </select>
-                      <label htmlFor="floatingSelect">City</label>
+                      <label>State</label>
                     </div>
                   </form>
                 </div>
                 <div className="col-xxl-4">
                   <form>
                     <div className="form-floating theme-form-floating">
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="address3"
-                        defaultValue={94080}
-                      />
-                      <label htmlFor="address3">Pin Code</label>
+                      <select
+                        className="form-select"
+                        onChange={HandleAddressEdit}
+                        value={newUser.city}
+                        name="city"
+                      >
+                        <City />
+                      </select>
+                      <label>City</label>
                     </div>
                   </form>
                 </div>
+                <div className="col-xxl-6">
+                  <form>
+                    <div className="form-floating theme-form-floating">
+                      <select
+                        className="form-select"
+                        onChange={HandleAddressEdit}
+                        value={newUser.gender}
+                        name="gender"
+                      >
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      <label>Gender</label>
+                    </div>
+                  </form>
+                </div>
+                <div className="col-xxl-6">
+                  <form>
+                    <div className="form-floating theme-form-floating">
+                     <input type="date"  className="form-control" onChange={HandleAddressEdit} value={newUser.DOB} name="DOB"/>
+                      <label>Date Of Birth</label>
+                    </div>
+                  </form>
+                </div>
+               
               </div>
             </div>
             <div className="modal-footer">
@@ -170,7 +173,7 @@ export default function EditCardProfile() {
               </button>
               <button
                 type="button"
-                data-bs-dismiss="modal"
+              onClick={EditAdress}
                 className="btn theme-bg-color btn-md fw-bold text-light"
               >
                 Save changes

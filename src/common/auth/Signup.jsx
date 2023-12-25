@@ -65,7 +65,7 @@ export default function Signup() {
                           onChange={SignupHandle}
                           required
                         />
-                        <label htmlFor="email">Email Address</label>
+                        <label >Email Address</label>
                       </div>
                     </div>
                     <div className="col-12">
@@ -78,7 +78,7 @@ export default function Signup() {
                           onChange={SignupHandle}
                          required
                         />
-                        <label htmlFor="password">Password</label>
+                        <label >Password</label>
                       </div>
                     </div>
                     <div className="col-12">

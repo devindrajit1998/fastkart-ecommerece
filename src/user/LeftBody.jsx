@@ -3,7 +3,7 @@ import { UserDataProvider } from "../ContextAPI/UserContext";
 
 export default function LeftBody() {
 
-  const {loggedUser, handleImageUpload, ImageUpload} = UserDataProvider();
+  const {loggedUser, handleImageUpload} = UserDataProvider();
 
   return (
     <>
@@ -25,7 +25,7 @@ export default function LeftBody() {
             <div className="profile-image">
               <div className="position-relative">
                 <img
-                  src="images/inner-page/user/1.jpg"
+                  src="https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"
                   className="blur-up lazyload update_img"
                   alt=""
                 />
@@ -37,7 +37,7 @@ export default function LeftBody() {
               </div>
             </div>
             <div className="profile-name">
-              <h3 onClick={ImageUpload}>{loggedUser.name}</h3>
+              <h3>{loggedUser.name}</h3>
               <h6 className="text-content">{loggedUser.userName}</h6>
             </div>
           </div>

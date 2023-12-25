@@ -24,9 +24,12 @@ const UserProvider = ({ children }) => {
     phone: "",
     address: "",
     country: "",
+    state: "",
     city: "",
     pin: "",
     dp: "",
+    gender: "",
+    DOB: "",
   });
 
   const [user, setUser] = useState([]);
@@ -317,10 +320,10 @@ const UserProvider = ({ children }) => {
   // ----------------------------------------------------------------------------------------
   // ------------------------------- image upload Management ------------------------------->
   // ----------------------------------------------------------------------------------------
-  // const handleImageUpload = (event) => {
-  //   const imageFile = event.target.files[0];
-  //   setSelectedImage(imageFile);
-  // }
+  const handleImageUpload = (event) => {
+    const imageFile = event.target.files[0];
+    setSelectedImage(imageFile);
+  };
 
   // useEffect(() => {
   //   if (selectedImage) {
@@ -330,43 +333,110 @@ const UserProvider = ({ children }) => {
   //   }
   // }, [selectedImage]);
 
-  const handleImageUpload = (event) => {
-    const imageFile = event.target.files[0];
-    setSelectedImage(imageFile);
-  };
-  
-  useEffect(() => {
-    const updateImage = async () => {
-      if (selectedImage) {
-        const objectUrl = URL.createObjectURL(selectedImage);
-        setImageUrl(objectUrl);
-        
-        try {
-          const formData = new FormData();
-          formData.append('image', selectedImage);
-          const newID = loggedUser.id;
-          const response = await fetch( baseURL + UserDetailsEndpoint + `/${newID}`, {
-            method: 'PATCH',
-            body: JSON.stringify({dp:formData}),
-          });
-  
-          if (response.ok) {
-            console.log('Image updated on JSON server!');
-          } else {
-            console.error('Failed to update image on JSON server');
-          }
-        } catch (error) {
-          console.error('Error updating image:', error);
-        }
-      }
-    };
-  
-    updateImage();
-  }, [selectedImage]);
-  
+  // const handleImageUpload = (event) => {
+  //   const imageFile = event.target.files[0];
+  //   setSelectedImage(imageFile);
+  // };
 
+  // useEffect(() => {
+  //   const updateImage = async (id) => {
+
+  //     if (selectedImage) {
+  //       const fileToBase64 = async (file) => {
+  //         return new Promise((resolve, reject) => {
+  //           const reader = new FileReader();
+
+  //           reader.onload = () => {
+  //             const base64String = reader.result.split(",")[1];
+  //             resolve(base64String);
+  //           };
+
+  //           reader.onerror = (error) => {
+  //             reject(error);
+  //           };
+
+  //           reader.readAsDataURL(file);
+  //         });
+  //       };
+
+  //       const convertImageToBase64 = async () => {
+  //         try {
+  //           const base64String = await fileToBase64(selectedImage);
+  //           console.log("Base64 string:", base64String);
+  //           setImageUrl(base64String);
+  //         } catch (error) {
+  //           console.error("Error converting image to Base64:", error);
+  //         }
+  //       };
+
+  //       convertImageToBase64();
+  //     }
+
+  //     try {
+  //       const newID = loggedUser.id;
+  //       const updateResponse = await fetch(
+  //         baseURL + UserDetailsEndpoint + `/${newID}`,
+  //         {
+  //           method: "PATCH",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify({dp:imageUrl}),
+  //         }
+  //       );
+
+  //       if (!updateResponse.ok) {
+  //         throw new Error("Failed to update image.");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error updating image:", error);
+  //     }
+
+  //   };
+
+  //   updateImage();
+  // }, [selectedImage]);
+
+  // console.log("dp===============================>", selectedImage);
   // ----------------------------------------------------------------------------------------
   // ------------------------------- image upload Management ------------------------------->
+  // ----------------------------------------------------------------------------------------
+  //*****************************************************************************************
+  // ----------------------------------------------------------------------------------------
+  // ------------------------------------- Edit Address ------------------------------------>
+  // ----------------------------------------------------------------------------------------
+  const HandleAddressEdit = (e) => {
+    const { name, value } = e.target;
+    setNewUser((items) => ({ ...items, [name]: value }));
+  };
+  console.log("address edit----->", newUser);
+
+  const EditAdress = async (id) => {
+    try {
+      const newID = loggedUser.id;
+      const updateResponse = await fetch(
+        baseURL + UserDetailsEndpoint + `/${newID}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name: newUser.name, phone: newUser.phone, gender: newUser.gender, DOB: newUser.DOB, country: newUser.country, state: newUser.state, city: newUser.city, address: newUser.address, pin: newUser.pin }),
+        }
+      );
+
+      if (!updateResponse.ok) {
+        throw new Error("Failed to update details.");
+      }
+
+      console.log("details updated successfully!");
+    } catch (error) {
+      console.error("Error updating details:", error);
+    }
+  };
+
+  // ----------------------------------------------------------------------------------------
+  // ------------------------------------- Edit Address ------------------------------------>
   // ----------------------------------------------------------------------------------------
 
   return (
@@ -383,6 +453,7 @@ const UserProvider = ({ children }) => {
         oldPassword,
         newPassword,
         confirmPassword,
+        newUser,
         Logout,
         SignupHandle,
         SignupSubmit,
@@ -395,6 +466,8 @@ const UserProvider = ({ children }) => {
         handleConfirmPassword,
         resetPassword,
         handleImageUpload,
+        HandleAddressEdit,
+        EditAdress
       }}
     >
       {children}

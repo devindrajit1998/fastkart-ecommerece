@@ -1,11 +1,16 @@
 import React, { useEffect } from "react";
 import { UserDataProvider } from "../ContextAPI/UserContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import EditCardProfile from "./EditCardProfile";
+import PasswordModal from "./PasswordModal";
+
 
 export default function ProfilePill() {
-  const { Logout, session } = UserDataProvider();
+  
+  const { Logout, session, loggedUser,open, ToggleModal, openPassword, TogglePassword , user} = UserDataProvider();
   const navigate = useNavigate();
+  const findUser = user.find((item)=>item.id === loggedUser.id);
+
 
   useEffect(() => {
     if (session === true) {
@@ -32,15 +37,8 @@ export default function ProfilePill() {
             </div>
             <div className="profile-name-detail">
               <div className="d-sm-flex align-items-center d-block">
-                <h3>Vicki E. Pope</h3>
+                <h3>{loggedUser.name}</h3>
               </div>
-              <a
-                href="javascript:void(0)"
-                data-bs-toggle="modal"
-                data-bs-target="#editProfile"
-              >
-                Edit
-              </a>
             </div>
 
             <div className="profile-description">
@@ -62,21 +60,19 @@ export default function ProfilePill() {
                     <tbody>
                       <tr>
                         <td>Gender :</td>
-                        <td>Female</td>
+                        <td>{loggedUser.gender}</td>
                       </tr>
                       <tr>
                         <td>Birthday :</td>
-                        <td>21/05/1997</td>
+                        <td>{loggedUser.DOB}</td>
                       </tr>
                       <tr>
                         <td>Phone Number :</td>
-                        <td>
-                          <a href="javascript:void(0)">+91 846 - 547 - 210</a>
-                        </td>
+                        <td>{loggedUser.phone}</td>
                       </tr>
                       <tr>
                         <td>Address :</td>
-                        <td>549 Sulphur Springs Road, Downers, IL</td>
+                        <td>{loggedUser.address}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -90,29 +86,20 @@ export default function ProfilePill() {
                       <tr>
                         <td>Email :</td>
                         <td>
-                          <a href="javascript:void(0)">
-                            vicki.pope@gmail.com
-                            <span
-                              data-bs-toggle="modal"
-                              data-bs-target="#editProfile"
-                            >
-                              Edit
-                            </span>
-                          </a>
+                          <Link>{loggedUser.userName}</Link>
                         </td>
                       </tr>
                       <tr>
                         <td>Password :</td>
                         <td>
-                          <a href="javascript:void(0)">
+                          <Link >
                             ●●●●●●
                             <span
-                              data-bs-toggle="modal"
-                              data-bs-target="#editProfile"
+                              onClick={TogglePassword}
                             >
                               Edit
                             </span>
-                          </a>
+                          </Link>
                         </td>
                       </tr>
                       <tr>
@@ -143,7 +130,8 @@ export default function ProfilePill() {
           </div>
         </div>
       </div>
-      {/* <EditCardProfile/> */}
+      {/* {open && <EditCardProfile />} */}
+      {openPassword && <PasswordModal/>}
     </>
   );
 }
