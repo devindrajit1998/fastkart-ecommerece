@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { UserDataProvider } from "../ContextAPI/UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import EditCardProfile from "./EditCardProfile";
@@ -9,8 +9,17 @@ export default function ProfilePill() {
   
   const { Logout, session, loggedUser,open, ToggleModal, openPassword, TogglePassword , user} = UserDataProvider();
   const navigate = useNavigate();
-  const findUser = user.find((item)=>item.id === loggedUser.id);
+  const[userData, setUserData]= useState({});
 
+useEffect(()=>{
+  if(loggedUser && loggedUser.length > 0){
+    const findUser = user.find((item)=>item.id === loggedUser.id);
+    setUserData(findUser)
+  }
+},[session])
+
+ 
+  console.log("userData", userData)
 
   useEffect(() => {
     if (session === true) {

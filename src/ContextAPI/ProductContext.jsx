@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 
 const ProductContext = createContext();
 
-
 const ProductProvider = ({ children }) => {
   // ----------------------------------------------------------------------------------------
   // ----------------------------------- Common States ------------------------------------->
@@ -58,6 +57,8 @@ const ProductProvider = ({ children }) => {
 
   // for on sale data ----------------------->
   const [sale, setSale] = useState([]);
+  // for on search data --------------------->
+  const [searchQuery, setSearchQuery] = useState("");
 
   // ----------------------------------------------------------------------------------------
   // ----------------------------------- Common States ------------------------------------->
@@ -68,11 +69,11 @@ const ProductProvider = ({ children }) => {
   // ----------------------------------------------------------------------------------------
   useEffect(() => {
     // const baseURL = 'http://localhost:3001/';
-    const baseURL = 'https://fastkart-api.onrender.com/';
-    const categoriesEndpoint = 'categories';
-    const shopDataEndpoint = 'StoreData';
-    const bannerDataEndpoint = 'bannerdata';
-    const couponCodesEndpoint = 'CouponCodes';
+    const baseURL = "https://fastkart-api.onrender.com/";
+    const categoriesEndpoint = "categories";
+    const shopDataEndpoint = "StoreData";
+    const bannerDataEndpoint = "bannerdata";
+    const couponCodesEndpoint = "CouponCodes";
 
     const fetchData = async () => {
       try {
@@ -87,7 +88,7 @@ const ProductProvider = ({ children }) => {
           !bannerDataResponse.ok ||
           !couponCodesResponse.ok
         ) {
-          throw new Error('One or more network responses were not ok.');
+          throw new Error("One or more network responses were not ok.");
         }
 
         const categoriesData = await categoriesResponse.json();
@@ -99,9 +100,8 @@ const ProductProvider = ({ children }) => {
         setAllData(shopData);
         setBanner(bannerData);
         setCupon(couponCodes);
-
       } catch (error) {
-        console.error('There was a problem fetching the data:', error);
+        console.error("There was a problem fetching the data:", error);
       }
     };
 
@@ -131,7 +131,7 @@ const ProductProvider = ({ children }) => {
     setModalData(MData);
   };
 
-  useEffect(() => { }, [modalData]);
+  useEffect(() => {}, [modalData]);
   // <---------------------------- function to find the id
   //******************************************************
   // add to cart function ------------------------------->
@@ -330,7 +330,39 @@ const ProductProvider = ({ children }) => {
   // ----------------------------- Shop Page Data Management ------------------------------->
   // ----------------------------------------------------------------------------------------
   // ****************************************************************************************
+  // ----------------------------------------------------------------------------------------
+  // ----------------------------- Search Function Management ------------------------------>
+  // ----------------------------------------------------------------------------------------
+  const [searchData, setSearchData] = useState([]);
 
+  const handleSearchInput = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  // Function to filter data based on search query
+
+  const filteredData = allData.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.subcategory
+        .toLowerCase()
+        .includes(searchQuery.toLocaleLowerCase()) ||
+      item.subSubcategory
+        .toLowerCase()
+        .includes(searchQuery.toLocaleLowerCase())
+  );
+
+  useEffect(() => {
+    setSearchData(filteredData);
+  }, [filteredData]);
+
+  // console.log("search result ------- >", filteredData);
+
+  // ----------------------------------------------------------------------------------------
+  // ----------------------------- Search Function Management ------------------------------>
+  // ----------------------------------------------------------------------------------------
+  // ****************************************************************************************
 
   return (
     <ProductContext.Provider
@@ -351,6 +383,8 @@ const ProductProvider = ({ children }) => {
         featured,
         sale,
         banner,
+        searchQuery,
+        searchData,
         ToggleModal,
         filterByCategory,
         NavFilter,
@@ -362,6 +396,7 @@ const ProductProvider = ({ children }) => {
         handleOnChange,
         matchCupon,
         removeSingleWish,
+        handleSearchInput,
       }}
     >
       {children}

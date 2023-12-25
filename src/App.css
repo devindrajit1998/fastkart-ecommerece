@@ -123,3 +123,33 @@ table{
     transform: translate(-50%, -50%) scale(1);
   }
 }
+
+.relative{
+  position: relative;
+}
+
+.absolute{
+  position: absolute;
+}
+
+.search_result{
+  top: 70px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff7a;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.search_result li{
+  background-color: #eeeeee82;
+  padding: 15px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+.search_result li span{
+  font-size: 17px;
+}
