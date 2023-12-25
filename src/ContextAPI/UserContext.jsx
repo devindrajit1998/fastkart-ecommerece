@@ -29,6 +29,7 @@ const UserProvider = ({ children }) => {
   });
 
   const [user, setUser] = useState([]);
+  console.log("my user", user)
 
   //to open modal -------------------------->
 
@@ -40,7 +41,6 @@ const UserProvider = ({ children }) => {
   // ------------------------------------- API States -------------------------------------->
   // ----------------------------------------------------------------------------------------
   // const baseURL = "http://localhost:3001/";
-  // const UserDetailsEndpoint = "UserDetails";
   const baseURL = "https://fastkart-api.onrender.com/";
   const UserDetailsEndpoint = "UserDetails";
 
@@ -233,7 +233,7 @@ const UserProvider = ({ children }) => {
     if (!findMatchUser) {
       setSession(true);
       setUser((item) => [...item, newUser]);
-      createData();
+      createData(newUser);
     } else {
       alert("User Already Exists !");
     }
