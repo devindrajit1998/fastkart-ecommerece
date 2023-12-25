@@ -4,22 +4,32 @@ import { Link, useNavigate } from "react-router-dom";
 import EditCardProfile from "./EditCardProfile";
 import PasswordModal from "./PasswordModal";
 
-
 export default function ProfilePill() {
-  
-  const { Logout, session, loggedUser,open, ToggleModal, openPassword, TogglePassword , user} = UserDataProvider();
+  const {
+    Logout,
+    session,
+    loggedUser,
+    open,
+    ToggleModal,
+    openPassword,
+    TogglePassword,
+    user,
+  } = UserDataProvider();
   const navigate = useNavigate();
-  const[userData, setUserData]= useState({});
+  const [userData, setUserData] = useState(loggedUser);
 
-useEffect(()=>{
-  if(loggedUser && loggedUser.length > 0){
-    const findUser = user.find((item)=>item.id === loggedUser.id);
-    setUserData(findUser)
-  }
-},[session])
+  const getUser = (id) => {
+    const findUser = user.find((item) => item.id === loggedUser.id);
+    if (findUser) {
+      setUserData(findUser);
+    }
+  };
 
- 
-  console.log("userData", userData)
+  useEffect(() => {
+    getUser();
+  }, [user]);
+
+  console.log("userData", userData);
 
   useEffect(() => {
     if (session === true) {
@@ -46,7 +56,7 @@ useEffect(()=>{
             </div>
             <div className="profile-name-detail">
               <div className="d-sm-flex align-items-center d-block">
-                <h3>{loggedUser.name}</h3>
+                <h3>{userData.name}</h3>
               </div>
             </div>
 
@@ -69,19 +79,19 @@ useEffect(()=>{
                     <tbody>
                       <tr>
                         <td>Gender :</td>
-                        <td>{loggedUser.gender}</td>
+                        <td>{userData.gender}</td>
                       </tr>
                       <tr>
                         <td>Birthday :</td>
-                        <td>{loggedUser.DOB}</td>
+                        <td>{userData.DOB}</td>
                       </tr>
                       <tr>
                         <td>Phone Number :</td>
-                        <td>{loggedUser.phone}</td>
+                        <td>{userData.phone}</td>
                       </tr>
                       <tr>
                         <td>Address :</td>
-                        <td>{loggedUser.address}</td>
+                        <td>{userData.address}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -95,19 +105,15 @@ useEffect(()=>{
                       <tr>
                         <td>Email :</td>
                         <td>
-                          <Link>{loggedUser.userName}</Link>
+                          <Link>{userData.userName}</Link>
                         </td>
                       </tr>
                       <tr>
                         <td>Password :</td>
                         <td>
-                          <Link >
+                          <Link>
                             ●●●●●●
-                            <span
-                              onClick={TogglePassword}
-                            >
-                              Edit
-                            </span>
+                            <span onClick={TogglePassword}>Edit</span>
                           </Link>
                         </td>
                       </tr>
@@ -140,7 +146,7 @@ useEffect(()=>{
         </div>
       </div>
       {/* {open && <EditCardProfile />} */}
-      {openPassword && <PasswordModal/>}
+      {openPassword && <PasswordModal />}
     </>
   );
 }

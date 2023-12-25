@@ -355,7 +355,7 @@ const ProductProvider = ({ children }) => {
 
   useEffect(() => {
     setSearchData(filteredData);
-  }, [filteredData]);
+  }, [searchQuery]);
 
   // console.log("search result ------- >", filteredData);
 
