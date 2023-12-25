@@ -27,7 +27,7 @@ export default function Shop() {
                       return (
                         <li
                           className="nav-item"
-                          role="presentation"
+                          
                           key={curElem.id}
                         >
                           <button
