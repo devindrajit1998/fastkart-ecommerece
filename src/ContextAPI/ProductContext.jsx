@@ -67,7 +67,8 @@ const ProductProvider = ({ children }) => {
   // ------------------------------------- API States -------------------------------------->
   // ----------------------------------------------------------------------------------------
   useEffect(() => {
-    const baseURL = 'http://localhost:3001/';
+    // const baseURL = 'http://localhost:3001/';
+    const baseURL = 'https://fastkart-api.onrender.com/';
     const categoriesEndpoint = 'categories';
     const shopDataEndpoint = 'StoreData';
     const bannerDataEndpoint = 'bannerdata';

@@ -84,8 +84,7 @@ export default function CheckOutCard() {
             <li>
               <Link
                 to="/shop"
-                className="btn btn-light shopping-button text-dark"
-              >
+                className="btn btn-light shopping-button text-dark">
                 <i className="fa-solid fa-arrow-left-long me-2" />
                 Return To Shopping
               </Link>

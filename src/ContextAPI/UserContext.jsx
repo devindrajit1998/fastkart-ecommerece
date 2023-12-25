@@ -39,11 +39,13 @@ const UserProvider = ({ children }) => {
   // ----------------------------------------------------------------------------------------
   // ------------------------------------- API States -------------------------------------->
   // ----------------------------------------------------------------------------------------
-
+  // const baseURL = "http://localhost:3001/";
+  // const UserDetailsEndpoint = "UserDetails";
+  const baseURL = "https://fastkart-api.onrender.com/";
+  const UserDetailsEndpoint = "UserDetails";
 
   useEffect(() => {
-    const baseURL = "http://localhost:3001/";
-    const UserDetailsEndpoint = "UserDetails";
+
 
     const fetchData = async () => {
       try {
@@ -60,70 +62,74 @@ const UserProvider = ({ children }) => {
       }
     };
 
-    const createData = async (newUserData) => {
-      try {
-        const createResponse = await fetch(baseURL + UserDetailsEndpoint, {
-          method: "POST",
+    fetchData();
+  }, []);
+
+
+ 
+  const createData = async (newUser) => {
+    try {
+      const createResponse = await fetch(baseURL + UserDetailsEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newUser),
+       
+      });
+
+      if (!createResponse.ok) {
+        throw new Error("Failed to create data.");
+      }
+    } catch (error) {
+      console.error("Error creating data:", error);
+    }
+    console.log(("created"), newUser);
+  };
+
+
+  const updateData = async (id, updatedUserData) => {
+    try {
+      const updateResponse = await fetch(
+        baseURL + UserDetailsEndpoint + `/${id}`,
+        {
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(newUserData),
-        });
-
-        if (!createResponse.ok) {
-          throw new Error("Failed to create data.");
+          body: JSON.stringify(updatedUserData),
         }
+      );
 
-        fetchData();
-      } catch (error) {
-        console.error("Error creating data:", error);
+      if (!updateResponse.ok) {
+        throw new Error("Failed to update data.");
       }
-    };
 
-    const updateData = async (id, updatedUserData) => {
-      try {
-        const updateResponse = await fetch(
-          baseURL + UserDetailsEndpoint + `/${id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(updatedUserData),
-          }
-        );
 
-        if (!updateResponse.ok) {
-          throw new Error("Failed to update data.");
+    } catch (error) {
+      console.error("Error updating data:", error);
+    }
+  };
+
+  const deleteData = async (id) => {
+    try {
+      const deleteResponse = await fetch(
+        baseURL + UserDetailsEndpoint + `/${id}`,
+        {
+          method: "DELETE",
         }
+      );
 
-        fetchData();
-      } catch (error) {
-        console.error("Error updating data:", error);
+      if (!deleteResponse.ok) {
+        throw new Error("Failed to delete data.");
       }
-    };
 
-    const deleteData = async (id) => {
-      try {
-        const deleteResponse = await fetch(
-          baseURL + UserDetailsEndpoint + `/${id}`,
-          {
-            method: "DELETE",
-          }
-        );
 
-        if (!deleteResponse.ok) {
-          throw new Error("Failed to delete data.");
-        }
+    } catch (error) {
+      console.error("Error deleting data:", error);
+    }
+  };
 
-        fetchData();
-      } catch (error) {
-        console.error("Error deleting data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   // ----------------------------------------------------------------------------------------
   // ------------------------------------- API States -------------------------------------->
@@ -227,12 +233,16 @@ const UserProvider = ({ children }) => {
     if (!findMatchUser) {
       setSession(true);
       setUser((item) => [...item, newUser]);
+      createData();
     } else {
       alert("User Already Exists !");
     }
   };
   console.log("signup data", user);
 
+  // useEffect(()=>{
+  //   createData()
+  //  },[newUser])
   // ----------------------------------------------------------------------------------------
   // -------------------------------- Signup Data Management ------------------------------->
   // ----------------------------------------------------------------------------------------
