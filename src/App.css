@@ -153,3 +153,7 @@ table{
 .search_result li span{
   font-size: 17px;
 }
+.search_result li span img{
+  width: 30px;
+  margin-left: 30px;
+}

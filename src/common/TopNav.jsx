@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 
 export default function TopNav() {
   const { handleSearchInput, searchQuery, searchData } = useProductProvider();
-let display = '';
+  let display = "";
 
-if( searchQuery.length === 0) {
-  display = 'd-none'
-}
+  if (searchQuery.length === 0) {
+    display = "d-none";
+  }
 
   return (
     <>
@@ -75,7 +75,12 @@ if( searchQuery.length === 0) {
                       return (
                         <>
                           <li key={item.id}>
-                            <span>{item.name}</span>
+                            <Link to={`/product/${item.id}`}>
+                              <span>{item.name}</span>
+                              <span>
+                                <img src={item.thumbnail} alt="" />
+                              </span>
+                            </Link>
                           </li>
                         </>
                       );
